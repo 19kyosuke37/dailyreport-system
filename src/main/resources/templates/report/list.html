@@ -27,11 +27,11 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr th:each="daily:${dailyList}">
-                                            <td class="align-middle" th:text="${daily.name}"></td>
-                                            <td class="align-middle" th:text="${daily.date}"></td>
+                                        <tr th:each="report:${reportList}">
+                                            <td class="align-middle" th:text="${report.name}"></td>
+                                            <td class="align-middle" th:text="${report.date}"></td>
                                             <td calss="align-middle" th:text="${daily.title}"></td>
-                                            <td class="align-middle"><a th:href="@{/daily/{id}/(id=${daily.id})}" class="btn btn-primary">詳細</a></td>
+                                            <td class="align-middle"><a th:href="@{/report/{id}/(id=${report.id})}" class="btn btn-primary">詳細</a></td>
                                         </tr>
                                     </tbody>
                                 </table>

@@ -1,9 +1,11 @@
 package com.techacademy.entity;
 
+
+import java.sql.Date;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 import org.hibernate.annotations.SQLRestriction;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -22,13 +24,7 @@ import lombok.Data;
 public class Report {
 
 
-    public String getFormattedReportDate() {
-        /*if (reportedAt != null) {*/
-              DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-              return reportDate.format(formatter);
-        /*}
-          return null;*/
-    }
+
 
 
     //ID
@@ -39,7 +35,8 @@ public class Report {
 
     //日付
     @Column(nullable = false)
-    private LocalDateTime reportDate;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date reportDate;
 
     //タイトル
     @Column(nullable = false, length = 100)
@@ -66,7 +63,7 @@ public class Report {
     //社員番号
 
     @ManyToOne
-    @JoinColumn(name = "employee_code")
+    @JoinColumn(name = "employee_code" ,referencedColumnName = "code")
     private Employee employeeCode;
 
 

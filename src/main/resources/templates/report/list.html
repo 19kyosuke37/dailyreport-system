@@ -28,9 +28,9 @@
                                     </thead>
                                     <tbody>
                                         <tr th:each="report:${reportList}">
-                                            <td class="align-middle" th:text="${report.name}"></td>
-                                            <td class="align-middle" th:text="${report.date}"></td>
-                                            <td calss="align-middle" th:text="${daily.title}"></td>
+                                            <td class="align-middle" th:text="${report.employeeCode.name}"></td>
+                                            <td class="align-middle" th:text="${report.reportDate}"></td>
+                                            <td calss="align-middle" th:text="${report.title}"></td>
                                             <td class="align-middle"><a th:href="@{/report/{id}/(id=${report.id})}" class="btn btn-primary">詳細</a></td>
                                         </tr>
                                     </tbody>
@@ -39,7 +39,7 @@
                         </div>
                         <p class="mb-3" th:text="'（ 全' + ${listSize} + '件 ）'">
                         <div>
-                            <a th:href="@{/daily/add}" class="btn btn-primary">登録</a>
+                            <a th:href="@{/report/add}" class="btn btn-primary">登録</a>
                         </div>
                     </div>
                 </div>

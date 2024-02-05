@@ -21,7 +21,8 @@ public class SecurityConfig {
         ).logout(logout -> logout.logoutSuccessUrl("/login") // ログアウト後のリダイレクト先
         ).authorizeHttpRequests(
                 auth -> auth.requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll() // css等は未ログインでアクセス可
-                        .requestMatchers("/employees/**").hasAnyAuthority("ADMIN").anyRequest().authenticated()); // その他はログイン必要
+                        .requestMatchers("/employees/**").hasAnyAuthority("ADMIN")//employeeで始まるURLはADMINの権限のユーザーしかアクセスできないという意味
+                        .anyRequest().authenticated()); // その他はログイン必要
 
         return http.build();
     }

@@ -9,6 +9,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.techacademy.entity.Employee;
+import com.techacademy.entity.Employee.Role;
 
 public class UserDetail implements UserDetails {
     private static final long serialVersionUID = 1L;
@@ -65,5 +66,11 @@ public class UserDetail implements UserDetails {
     public boolean isEnabled() {
         // 従業員が有効であればtrueを返す
         return true;
+    }
+
+
+    //追記
+    public Role getRole(){
+        return employee.getRole();
     }
 }

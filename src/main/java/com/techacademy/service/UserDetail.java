@@ -73,4 +73,8 @@ public class UserDetail implements UserDetails {
     public Role getRole(){
         return employee.getRole();
     }
+
+    public String getName() {
+        return employee.getName();
+    }
 }

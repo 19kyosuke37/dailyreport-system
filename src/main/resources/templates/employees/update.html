@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html class="h-100" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="common/header :: head_fragment(title=従業員更新)"></head>
+<head th:replace="common/header :: head_fragment(title=従業員更新)">
+
+</head>
 
 <body class="h-100 overflow-hidden">
     <div class="row h-100">
@@ -40,7 +42,7 @@
                                         <p class="mb-1"></p>
                                         <div class="col-md-7">
                                             <input class="form-control" type="text" th:field="*{name}"
-                                                th:errorclass="err">
+                                                th:errorclass="text-danger">
                                             <span th:errors="*{name}" class="text-danger"></span>
                                         </div>
                                     </div>

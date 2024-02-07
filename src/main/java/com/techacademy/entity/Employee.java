@@ -6,6 +6,7 @@ import java.util.List;
 import org.hibernate.annotations.SQLRestriction;
 import org.hibernate.validator.constraints.Length;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -73,8 +74,8 @@ public class Employee {
     private LocalDateTime updatedAt;
 
 
-    @OneToMany(mappedBy = "employeeCode")
-    private List<Report> reports ;
+    @OneToMany(mappedBy = "employeeCode" ,cascade = CascadeType.ALL)
+    private List<Report> reportList ;
 
 
 }

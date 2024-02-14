@@ -25,8 +25,10 @@
                                         <label class="form-label" for="reportDate">日付</label>
                                         <p class="mb-1"></p>
                                         <div class="col-md-7">
-                                            <input class="form-control" type="date" th:field="*{reportDate}" th:errorclass="text-danger">
-                                             <!--span th:errors="*{reportDate}" class="text-danger"></span-->
+                                            <input class="form-control" type="date" th:field="*{reportDate}"
+                                                th:errorclass="text-danger" id="reportDate">
+                                            <span th:errors="*{reportDate}" class="text-danger"></span>
+                                            <span th:if="${reportDateError} neq null" th:text="${reportDateError}" class="text-danger"></span>
 
 
                                         </div>
@@ -36,17 +38,19 @@
                                         <label class="form-label" for="name">氏名</label>
                                         <p class="mb-1"></p>
                                         <div class="col-md-7">
-                                            <input class="form-control" type="hidden" th:text="${name}" th:value="${name}" id= "name">
+                                            <input class="form-control" type="hidden" th:text="${name}"
+                                                th:value="${name}" id="name">
 
                                         </div>
-                                    </div >
+                                    </div>
 
                                     <div class="mb-3">
                                         <label class="form-label" for="title">タイトル</label>
                                         <p class="mb-1"></p>
                                         <div class="col-md-7">
-                                            <input class="form-control" type="text" th:field="*{title}" th:errorclass="text-danger">
-                                            <!--span th:errors="*{title}" class="text-danger"></span-->
+                                            <input class="form-control" type="text" th:field="*{title}"
+                                                th:errorclass="text-danger" id="title">
+                                            <span th:errors="*{title}" class="text-danger"></span>
 
                                         </div>
                                     </div>
@@ -55,16 +59,17 @@
                                         <label class="form-label" for="content">内容</label>
                                         <p class="mb-1"></p>
                                         <div class="col-md-7">
-                                            <textarea class="form-control" rows="10" th:field="*{content}" th:errorclass="text-danger"></textarea>
+                                            <textarea class="form-control" rows="10" th:field="*{content}"
+                                                th:errorclass="text-danger" id="content"></textarea>
                                             <span th:errors="*{content}" class="text-danger"></span>
 
                                         </div>
                                     </div>
-                                </di>
-                                <p class="mt-5">
-                                    <input type="submit" value="登録" class="btn btn-primary">
-                                    <a th:href="@{/report}" class="btn btn-primary">戻る</a>
-                                </p>
+                                    </div>
+                                    <p class="mt-5">
+                                        <input type="submit" value="登録" class="btn btn-primary">
+                                        <a th:href="@{/report}" class="btn btn-primary">戻る</a>
+                                    </p>
                             </form>
                         </div>
                     </div>

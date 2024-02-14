@@ -116,12 +116,7 @@ public class EmployeeController {
         return "redirect:/employees";
     }
 
-
-
-
-    //以下追加
-
-
+    // 以下追加
 
     // 従業員更新画面(追加)
     @GetMapping(value = "/{code}/update")
@@ -140,10 +135,10 @@ public class EmployeeController {
     @PostMapping(value = "/{code}/update")
     public String update(@Validated Employee employee, BindingResult res, Model model) {
 
-        //空白では無いかつ、文字数が8文字以上16文字以下でない
+        // 空白では無いかつ、文字数が8文字以上16文字以下でない
         int passwordLength = employee.getPassword().length();
 
-        if (!"".equals(employee.getPassword()) &&(passwordLength < 8 || 16 < passwordLength)) {
+        if (!"".equals(employee.getPassword()) && (passwordLength < 8 || 16 < passwordLength)) {
 
             model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.RANGECHECK_ERROR),
                     ErrorMessage.getErrorValue(ErrorKinds.RANGECHECK_ERROR));
@@ -151,19 +146,17 @@ public class EmployeeController {
             return edit(null, model, employee);
         }
 
-        //空白では無いかつ、半角英数字以外を使用した場合
+        // 空白では無いかつ、半角英数字以外を使用した場合
         Pattern pattern = Pattern.compile("^[A-Za-z0-9]+$");
         Matcher matcher = pattern.matcher(employee.getPassword());
 
-        if(!"".equals(employee.getPassword()) && (!matcher.matches())){
+        if (!"".equals(employee.getPassword()) && (!matcher.matches())) {
 
             model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.HALFSIZE_ERROR),
                     ErrorMessage.getErrorValue(ErrorKinds.HALFSIZE_ERROR));
 
             return edit(null, model, employee);
         }
-
-
 
         // 入力チェック
         if (res.hasErrors()) {

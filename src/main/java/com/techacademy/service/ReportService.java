@@ -4,10 +4,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.techacademy.entity.Employee;
 import com.techacademy.entity.Report;
 import com.techacademy.repository.ReportRepository;
 
@@ -40,6 +39,8 @@ public class ReportService {
 
     }
 
+    //日報新規登録
+    @Transactional
     public Report saveReport(Report report) {
 
         LocalDateTime now = LocalDateTime.now();
@@ -48,5 +49,9 @@ public class ReportService {
 
         return reportRepository.save(report);
     }
+
+    //日報更新
+   // @Transactional
+
 
 }

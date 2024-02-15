@@ -75,8 +75,6 @@ public class ReportController {
 
         // ----------- すでに登録したい日付が、同じユーザーで登録されている場合のエラー----------------------------
 
-
-
         List<Report> reportList = reportService.findReportsByEmployeeCode(userDetail.getUsername());
 
         for (Report aReport : reportList) {
@@ -119,11 +117,25 @@ public class ReportController {
     }
 
     @PostMapping(value = "/{id}/update")
-    public String update(@Validated Report report, BindingResult res,@AuthenticationPrincipal UserDetail userDetail,
+    public String update(@Validated Report report, BindingResult res, @AuthenticationPrincipal UserDetail userDetail,
             Model model) {
 
         String employeeCode = userDetail.getUsername();
         Employee employee = employeeService.findByCode(employeeCode);
+        List<Report> reportList = reportService.findReportsByEmployeeCode(userDetail.getUsername());
+
+        for (Report aReport : reportList) {
+            if (aReport.getReportDate().equals(report.getReportDate())) {
+
+                if (report.getId() != aReport.getId()) {
+
+                    model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DATECHECK_ERROR),
+                            ErrorMessage.getErrorValue(ErrorKinds.DATECHECK_ERROR));
+
+                    return create(model, report, userDetail);
+                }
+            }
+        }
 
         if (res.hasErrors()) {
             return edit(null, model, report, userDetail); // メソッドの定義と呼び出しの間で引数の並び順が一致している必要がある。

@@ -75,19 +75,19 @@ public class ReportController {
 
         // ----------- すでに登録したい日付が、同じユーザーで登録されている場合のエラー----------------------------
 
-        // このした2/8に追加した文、ここからなんとからｒｅｐｏｒｔのreportDateだけとれないか？
-        List<Report> reportList;
-        reportList = reportService.findReportsByEmployeeCode(userDetail.getUsername());
 
-        /*
-         * if (report.getEmployeeCode()== employee)$$(report.getReportDate()==
-         * listから、forで繰り返して比較していくとか ) {
-         *
-         * model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DATECHECK_ERROR),
-         * ErrorMessage.getErrorValue(ErrorKinds.DATECHECK_ERROR));
-         *
-         * return create(model, report, userDetail); }
-         */
+
+        List<Report> reportList = reportService.findReportsByEmployeeCode(userDetail.getUsername());
+
+        for (Report aReport : reportList) {
+            if (aReport.getReportDate().equals(report.getReportDate())) {
+
+                model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DATECHECK_ERROR),
+                        ErrorMessage.getErrorValue(ErrorKinds.DATECHECK_ERROR));
+
+                return create(model, report, userDetail);
+            }
+        }
 
         // --------------------------------------------------------------------------------
 
@@ -119,20 +119,28 @@ public class ReportController {
     }
 
     @PostMapping(value = "/{id}/update")
-    public String update(@Validated Report report, BindingResult res,@AuthenticationPrincipal UserDetail userDetail, Model model) {
+    public String update(@Validated Report report, BindingResult res, @AuthenticationPrincipal UserDetail userDetail,
+            Model model) {
 
         String employeeCode = userDetail.getUsername();
         Employee employee = employeeService.findByCode(employeeCode);
 
-
         if (res.hasErrors()) {
-            return edit(null, model, report,userDetail); // メソッドの定義と呼び出しの間で引数の並び順が一致している必要がある。
-        } // ★修正が必要な気がする
+            return edit(null, model, report, userDetail); // メソッドの定義と呼び出しの間で引数の並び順が一致している必要がある。
+        }
 
         report.setEmployeeCode(employee);
 
-
         reportService.saveReport(report);
+        return "redirect:/report";
+
+    }
+
+    // 日報削除
+    @PostMapping(value = "{id}/delete")
+    public String delete(@PathVariable int id) {
+        reportService.reportDelete(id);
+
         return "redirect:/report";
 
     }

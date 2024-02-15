@@ -39,7 +39,7 @@ public class ReportService {
 
     }
 
-    //日報新規登録
+    //日報新規登録・更新
     @Transactional
     public Report saveReport(Report report) {
 
@@ -51,7 +51,12 @@ public class ReportService {
     }
 
     //日報更新
-   // @Transactional
+   @Transactional
+   public void reportDelete(int id) {
+       Report report = findById(id);
+       report.setDeleteFlg(true);
+   }
+
 
 
 }

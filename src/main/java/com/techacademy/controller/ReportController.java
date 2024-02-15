@@ -119,7 +119,7 @@ public class ReportController {
     }
 
     @PostMapping(value = "/{id}/update")
-    public String update(@Validated Report report, BindingResult res, @AuthenticationPrincipal UserDetail userDetail,
+    public String update(@Validated Report report, BindingResult res,@AuthenticationPrincipal UserDetail userDetail,
             Model model) {
 
         String employeeCode = userDetail.getUsername();

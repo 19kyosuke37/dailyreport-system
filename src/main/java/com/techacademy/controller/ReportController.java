@@ -1,5 +1,6 @@
 package com.techacademy.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -118,7 +119,7 @@ public class ReportController {
 
     @PostMapping(value = "/{id}/update")
     public String update(@Validated Report report, BindingResult res, @AuthenticationPrincipal UserDetail userDetail,
-            Model model) {
+            Model model,@PathVariable int id) {
 
         String employeeCode = userDetail.getUsername();
         Employee employee = employeeService.findByCode(employeeCode);
@@ -143,7 +144,14 @@ public class ReportController {
 
         report.setEmployeeCode(employee);
 
-        reportService.saveReport(report);
+        //------登録日時はそのままにする-----------------------------------------
+
+        LocalDateTime create =reportService.findById(id).getCreatedAt();
+        report.setCreatedAt(create);
+
+        reportService.updateReport(report);
+        //------------------------------------------------------------------
+
         return "redirect:/report";
 
     }

@@ -39,7 +39,7 @@ public class ReportService {
 
     }
 
-    //日報新規登録・更新
+    //日報新規登録
     @Transactional
     public Report saveReport(Report report) {
 
@@ -49,6 +49,19 @@ public class ReportService {
 
         return reportRepository.save(report);
     }
+
+    //日報更新
+    @Transactional
+    public Report updateReport(Report report) {
+
+        LocalDateTime now = LocalDateTime.now();
+
+        report.setUpdatedAt(now);
+
+        return reportRepository.save(report);
+    }
+
+
 
     //日報更新
    @Transactional

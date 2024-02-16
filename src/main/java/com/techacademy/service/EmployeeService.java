@@ -136,12 +136,8 @@ public class EmployeeService {
 
         LocalDateTime now = LocalDateTime.now();
         employee.setUpdatedAt(now);
-        employee.setCreatedAt(now);
 
-        /* なんでnull？　これで取れれないと作成した時間もnowになっちゃう
-        LocalDateTime create = employee.getCreatedAt();
-        employee.setCreatedAt(create);
-        */
+
 
         employeeRepository.save(employee);
         return ErrorKinds.SUCCESS;

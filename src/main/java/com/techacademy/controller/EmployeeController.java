@@ -1,5 +1,6 @@
 package com.techacademy.controller;
 
+import java.time.LocalDateTime;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -133,7 +134,7 @@ public class EmployeeController {
 
     // 従業員更新処理(追加）
     @PostMapping(value = "/{code}/update")
-    public String update(@Validated Employee employee, BindingResult res, Model model) {
+    public String update(@Validated Employee employee, BindingResult res, Model model,@PathVariable String code) {
 
         // 空白では無いかつ、文字数が8文字以上16文字以下でない
         int passwordLength = employee.getPassword().length();
@@ -163,12 +164,23 @@ public class EmployeeController {
             return edit(null, model, employee);
         }
 
+
+        //------登録日時はそのままにする(場所に注意。上から順番にプログラムが実行されることを意識する）------
+        /*～～復習～～
+         * 最初にErrorKinds result = employeeService.update(employee)より下に書いていたから、エラーが起きた
+         * それより下だと、 employeeRepository.save(employee);より後に実行されることになるから、CreatedAtがnullのままでエラーになる*/
+        LocalDateTime create = employeeService.findByCode(code).getCreatedAt();
+        employee.setCreatedAt(create);
+        //--------------------------------------------------------------------------------
+
         ErrorKinds result = employeeService.update(employee);
 
         if (ErrorMessage.contains(result)) {
             model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
             return edit(null, model, employee);
         }
+
+
 
         return "redirect:/employees";
     }

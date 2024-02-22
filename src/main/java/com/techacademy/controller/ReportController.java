@@ -106,6 +106,7 @@ public class ReportController {
     public String edit(@PathVariable Integer id, Model model, Report report,
             @AuthenticationPrincipal UserDetail userDetail) {
 
+        // ここでnullが必要なのはemployeeのほうと同じ理由
         if (id != null) {
             model.addAttribute("report", reportService.findById(id));
         } else {
@@ -119,15 +120,17 @@ public class ReportController {
 
     @PostMapping(value = "/{id}/update")
     public String update(@Validated Report report, BindingResult res, @AuthenticationPrincipal UserDetail userDetail,
-            Model model,@PathVariable int id) {
+            Model model, @PathVariable int id) {
 
         String employeeCode = userDetail.getUsername();
         Employee employee = employeeService.findByCode(employeeCode);
-        List<Report> reportList = reportService.findReportsByEmployeeCode(userDetail.getUsername());
+        List<Report> reportList = reportService.findReportsByEmployeeCode(employeeCode);
 
+        // 入力した日付」の日報データが存在する場合のエラー処理
         for (Report aReport : reportList) {
             if (aReport.getReportDate().equals(report.getReportDate())) {
-
+                // ※更新画面で表示中の日報データは除く。(選択している日付さえも更新できなくなってしまうから)
+                // つまり、下のエラー処理は処理対象の日付が、表示中の日付でない場合に実行することになる。
                 if (report.getId() != aReport.getId()) {
 
                     model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DATECHECK_ERROR),
@@ -144,13 +147,13 @@ public class ReportController {
 
         report.setEmployeeCode(employee);
 
-        //------登録日時はそのままにする-----------------------------------------
+        // ------登録日時はそのままにする-----------------------------------------
 
-        LocalDateTime create =reportService.findById(id).getCreatedAt();
+        LocalDateTime create = reportService.findById(id).getCreatedAt();
         report.setCreatedAt(create);
 
         reportService.updateReport(report);
-        //------------------------------------------------------------------
+        // ------------------------------------------------------------------
 
         return "redirect:/report";
 

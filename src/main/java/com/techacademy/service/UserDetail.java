@@ -68,9 +68,8 @@ public class UserDetail implements UserDetails {
         return true;
     }
 
-
-    //追記
-    public Role getRole(){
+    // 追記
+    public Role getRole() {
         return employee.getRole();
     }
 

@@ -25,10 +25,21 @@
                                         <label class="form-label" for="reportDate">日付</label>
                                         <p class="mb-1"></p>
                                         <div class="col-md-7">
+                                            <!--labelのforと、inputのidをそろえることで、ブラウザでlabelに相当する部分をクリックすれば、
+                                            input部の選択項目や入力を開始できる-->
+                                            <!--th:errorやspanの処理はemployeeとおなじ-->
+
+                                            　<!--★★th:field★★
+                                           　th:fieldはコントローラーで提供されたモデル属性に対応する。
+                                           したがって、*{reportDate} は、バックエンドのコントローラーが提供したModelのreportのフィールド（プロパティ）にバインドされる。
+                                           だから、最初は何も存在しない”新規登録”の項目にもコントローラー側では" @ModelAttribute Report reportでreportをmodelで提供している。
+                                           これでpostメソッドで返されたreportにはreportDateやtitle,content等のフィールドがバインドされた状態で返される。-->
+
                                             <input class="form-control" type="date" th:field="*{reportDate}"
                                                 th:errorclass="text-danger" id="reportDate">
                                             <span th:errors="*{reportDate}" class="text-danger"></span>
-                                            <span th:if="${reportDateError} neq null" th:text="${reportDateError}" class="text-danger"></span>
+                                            <span th:if="${reportDateError} neq null" th:text="${reportDateError}"
+                                                class="text-danger"></span>
 
 
                                         </div>
@@ -65,11 +76,11 @@
 
                                         </div>
                                     </div>
-                                    </div>
-                                    <p class="mt-5">
-                                        <input type="submit" value="登録" class="btn btn-primary">
-                                        <a th:href="@{/report}" class="btn btn-primary">戻る</a>
-                                    </p>
+                                </div>
+                                <p class="mt-5">
+                                    <input type="submit" value="登録" class="btn btn-primary">
+                                    <a th:href="@{/report}" class="btn btn-primary">戻る</a>
+                                </p>
                             </form>
                         </div>
                     </div>

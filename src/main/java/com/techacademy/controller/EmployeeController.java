@@ -46,7 +46,7 @@ public class EmployeeController {
 
     // 従業員詳細画面
     @GetMapping(value = "/{code}/")
-    // valueってのはあってもなくてもいいと思う（lesson16とか参照）
+    // valueってのはあってもなくてもいい
     public String detail(@PathVariable String code, Model model) {
 
         model.addAttribute("employee", employeeService.findByCode(code));
@@ -83,17 +83,22 @@ public class EmployeeController {
             return create(employee);
         }
 
-        // 論理削除を行った従業員番号を指定すると例外となるためtry~catchで対応
+        //★★★論理削除を行った従業員番号を指定すると例外となるためtry~catchで対応★★★
         // (findByIdでは削除フラグがTRUEのデータが取得出来ないため)
         try {
+            // サービスにて半角英数字チェックやDB登録処理を行い、結果をErrorKindsクラスで受け取る。
             ErrorKinds result = employeeService.save(employee);
 
+            // 結果の値によってエラーメッセージを判定し、モデルへ設定した後でcreateメソッドへ遷移する。
             if (ErrorMessage.contains(result)) {
                 model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
                 return create(employee);
             }
 
+            // 従業員IDが重複していた場合のエラー判定
         } catch (DataIntegrityViolationException e) {
+            // ErrorMessageクラスのgetErrorNameメソッドを使用して「"codeError",
+            // "既に登録されている社員番号です"」をモデルへ設定する。その後createメソッドへ遷移する。
             model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DUPLICATE_EXCEPTION_ERROR),
                     ErrorMessage.getErrorValue(ErrorKinds.DUPLICATE_EXCEPTION_ERROR));
             return create(employee);
@@ -117,12 +122,15 @@ public class EmployeeController {
         return "redirect:/employees";
     }
 
-    // 以下追加
 
-    // 従業員更新画面(追加)
+    // 従業員更新画面
     @GetMapping(value = "/{code}/update")
     public String edit(@PathVariable String code, Model model, Employee employee) {
 
+        /*下の処理について、
+         *存在する従業員の詳細ページから送られてくるのに、nullなはずがないと思っていたが、
+         *この後の更新処理時にpostメソッドで送られてきたものが、バリデーションでエラーがあり再度editメソッドに返された際には
+         *コードがnullなため、エラーがあったemplyeeの値でmodelを扱う必要があった！*/
         if (code != null) {
             model.addAttribute("employee", employeeService.findByCode(code));
         } else {
@@ -134,28 +142,15 @@ public class EmployeeController {
 
     // 従業員更新処理(追加）
     @PostMapping(value = "/{code}/update")
-    public String update(@Validated Employee employee, BindingResult res, Model model,@PathVariable String code) {
+    public String update(@Validated Employee employee, BindingResult res, Model model, @PathVariable String code) {
 
-        // 空白では無いかつ、文字数が8文字以上16文字以下でない
+        // 空欄でないかつ、文字数が8文字未満16文字を超えない、半角以外の英数字を使っていない//
         int passwordLength = employee.getPassword().length();
 
-        if (!"".equals(employee.getPassword()) && (passwordLength < 8 || 16 < passwordLength)) {
+        ErrorKinds result = employeeService.employeePasswordCheck(employee);
 
-            model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.RANGECHECK_ERROR),
-                    ErrorMessage.getErrorValue(ErrorKinds.RANGECHECK_ERROR));
-
-            return edit(null, model, employee);
-        }
-
-        // 空白では無いかつ、半角英数字以外を使用した場合
-        Pattern pattern = Pattern.compile("^[A-Za-z0-9]+$");
-        Matcher matcher = pattern.matcher(employee.getPassword());
-
-        if (!"".equals(employee.getPassword()) && (!matcher.matches())) {
-
-            model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.HALFSIZE_ERROR),
-                    ErrorMessage.getErrorValue(ErrorKinds.HALFSIZE_ERROR));
-
+        if (!"".equals(employee.getPassword()) && ErrorMessage.contains(result)) {
+            model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
             return edit(null, model, employee);
         }
 
@@ -164,23 +159,23 @@ public class EmployeeController {
             return edit(null, model, employee);
         }
 
-
-        //------登録日時はそのままにする(場所に注意。上から順番にプログラムが実行されることを意識する）------
-        /*～～復習～～
-         * 最初にErrorKinds result = employeeService.update(employee)より下に書いていたから、エラーが起きた
-         * それより下だと、 employeeRepository.save(employee);より後に実行されることになるから、CreatedAtがnullのままでエラーになる*/
+        // ------登録日時はそのままにする(場所に注意。上から順番にプログラムが実行されることを意識する）------
+        /*
+         * ～～復習～～ 最初にErrorKinds updateResult =
+         * employeeService.update(employee)より下に書いていたから、エラーが起きた それより下だと、
+         * employeeRepository.save(employee);より後に実行されることになるから、CreatedAtがnullのままで
+         * 更新データを保存することになるからエラーになる
+         */
         LocalDateTime create = employeeService.findByCode(code).getCreatedAt();
         employee.setCreatedAt(create);
-        //--------------------------------------------------------------------------------
+        // --------------------------------------------------------------------------------
 
-        ErrorKinds result = employeeService.update(employee);
+        ErrorKinds updateResult = employeeService.update(employee);
 
-        if (ErrorMessage.contains(result)) {
-            model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
+        if (ErrorMessage.contains(updateResult)) {
+            model.addAttribute(ErrorMessage.getErrorName(updateResult), ErrorMessage.getErrorValue(updateResult));
             return edit(null, model, employee);
         }
-
-
 
         return "redirect:/employees";
     }

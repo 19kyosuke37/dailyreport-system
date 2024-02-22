@@ -1,6 +1,5 @@
 package com.techacademy.entity;
 
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -22,40 +21,35 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name="reports")
+@Table(name = "reports")
 @SQLRestriction("delete_flg = false")
 public class Report {
 
-
-
-
-
-    //ID
+    // ID
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    //日付
+    // 日付
     @Column(nullable = false)
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @NotNull
     private LocalDate reportDate;
 
-    //タイトル
+    // タイトル
     @Column(nullable = false, length = 100)
     @NotEmpty
     @Length(max = 100)
     private String title;
 
-    //内容
-    @Column(nullable = false,columnDefinition = "LONGTEXT")
+    // 内容
+    @Column(nullable = false, columnDefinition = "LONGTEXT")
     @NotEmpty
     @Length(max = 600)
     private String content;
 
-
-   // 削除フラグ(論理削除を行うため)
-    @Column(columnDefinition="TINYINT", nullable = false)
+    // 削除フラグ(論理削除を行うため)
+    @Column(columnDefinition = "TINYINT", nullable = false)
     private boolean deleteFlg;
 
     // 登録日時
@@ -66,13 +60,10 @@ public class Report {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-
-    //社員番号
+    // 社員番号
 
     @ManyToOne
-    @JoinColumn(name = "employee_code" ,referencedColumnName = "code")
+    @JoinColumn(name = "employee_code", referencedColumnName = "code")
     private Employee employeeCode;
-
-
 
 }

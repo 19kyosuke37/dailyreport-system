@@ -14,6 +14,10 @@ public class ErrorMessage {
         private static final long serialVersionUID = 1L;
 
         {
+            /*キーに列挙型のErrorKindsをいれて、
+             * 値をリストとしている、
+             * リストの中身はエラーの名前（modelでテンプレに送るときのthymeleafでの場所）と、実際にブラウザで表示されるエラーの内容メッセージで構成されている*/
+
             // パスワード空白チェック用エラーメッセージ
             put(ErrorKinds.BLANK_ERROR, new ArrayList<String>(Arrays.asList("passwordError", "値を入力してください")));
             // パスワードの半角英数字チェック用エラーメッセージ
@@ -44,7 +48,11 @@ public class ErrorMessage {
         }
     }
 
+    /*コントローラーやサービスでエラーメッセージを呼び出すときに0,1じゃなくて、
+     * errorNameやErrorValueって呼び出せているの疑問だったかが、この部分で指定していた*/
+
     // エラーメッセージの名称を取得
+
     public static String getErrorName(ErrorKinds errorKinds) {
         return errorMessageMap.get(errorKinds).get(0);
     }

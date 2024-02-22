@@ -16,7 +16,7 @@ public class ReportService {
     private final ReportRepository reportRepository;
     private final EmployeeService employeeService;
 
-    public ReportService(ReportRepository reportRepository,EmployeeService employeeService) {
+    public ReportService(ReportRepository reportRepository, EmployeeService employeeService) {
         this.reportRepository = reportRepository;
         this.employeeService = employeeService;
     }
@@ -33,13 +33,13 @@ public class ReportService {
 
     public Report findById(int id) {
         Optional<Report> option = reportRepository.findById(id);
-        // 取得できなかった場合はnullを返す
+        // 上でoptionに代入する値が取得できなかった場合はnullを返す
         Report report = option.orElse(null);
         return report;
 
     }
 
-    //日報新規登録
+    // 日報新規登録
     @Transactional
     public Report saveReport(Report report) {
 
@@ -47,10 +47,15 @@ public class ReportService {
         report.setCreatedAt(now);
         report.setUpdatedAt(now);
 
+        /*
+         * auto-increment（自動増分）として設定されているフィールド(今回はid)がインスタンスに割り当てられるのは
+         * Repositoryのsaveメソッドなどで処理されたタイミング つまりこの下のメソッド！
+         */
+
         return reportRepository.save(report);
     }
 
-    //日報更新
+    // 日報更新
     @Transactional
     public Report updateReport(Report report) {
 
@@ -61,15 +66,11 @@ public class ReportService {
         return reportRepository.save(report);
     }
 
-
-
-    //日報更新
-   @Transactional
-   public void reportDelete(int id) {
-       Report report = findById(id);
-       report.setDeleteFlg(true);
-   }
-
-
+    // 日報更新
+    @Transactional
+    public void reportDelete(int id) {
+        Report report = findById(id);
+        report.setDeleteFlg(true);
+    }
 
 }

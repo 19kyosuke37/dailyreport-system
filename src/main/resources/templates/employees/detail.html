@@ -38,6 +38,9 @@
                                     <tr>
                                         <th>登録日時</th>
                                         <td class="align-middle" th:text="${#temporals.format(employee.createdAt, 'yyyy-MM-dd hh:mm:ss')}"></td>
+                                        <!--#temporals.format():
+                                        #temporalsはThymeleafの標準組み込みオブジェクトであり、取得してきた日時をフォーマットする
+                                    　　　.format()は、日時を指定された形式に変換するメソッド-->
                                     </tr>
                                     <tr>
                                         <th>更新日時</th>
@@ -56,7 +59,7 @@
 
                                     <div class="col-auto">
                                         <form name="form" th:action="@{/employees/{code}/delete(code=${code})}" th:method="post">
-                                            <input type="submit" value="削除" class="btn btn-primary">
+                                            <input type="submit" value="削除" class="btn btn-danger">
                                         </form>
                                     </div>
 

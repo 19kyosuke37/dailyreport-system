@@ -31,10 +31,13 @@ public class EmployeeService {
     @Transactional
     public ErrorKinds save(Employee employee) {
 
-        // パスワードチェック
-        ErrorKinds result = employeePasswordCheck(employee);
-        if (ErrorKinds.CHECK_OK != result) {
-            return result;
+     // パスワードチェック
+        if (!"".equals(employee.getPassword())) {
+
+            ErrorKinds result = employeePasswordCheck(employee);
+            if (ErrorKinds.CHECK_OK != result) {
+                return result;
+            }
         }
 
         // 従業員番号重複チェック
@@ -63,6 +66,7 @@ public class EmployeeService {
         Employee employee = findByCode(code);
         LocalDateTime now = LocalDateTime.now();
         employee.setUpdatedAt(now);
+        //完全に消すわけではなく、ここで論理削除して表示させなくしている
         employee.setDeleteFlg(true);
 
         return ErrorKinds.SUCCESS;
@@ -77,13 +81,13 @@ public class EmployeeService {
     public Employee findByCode(String code) {
         // findByIdで検索
         Optional<Employee> option = employeeRepository.findById(code);
-        // 取得できなかった場合はnullを返す
+        // 上で変数optionに値が取得できなかった場合はnullを返している
         Employee employee = option.orElse(null);
         return employee;
     }
 
     // 従業員パスワードチェック
-    private ErrorKinds employeePasswordCheck(Employee employee) {
+    public ErrorKinds employeePasswordCheck(Employee employee) {
 
         // 従業員パスワードの半角英数字チェック処理
         if (isHalfSizeCheckError(employee)) {
@@ -112,7 +116,7 @@ public class EmployeeService {
     }
 
     // 従業員パスワードの8文字～16文字チェック処理
-    public boolean isOutOfRangePassword(Employee employee) {
+    private boolean isOutOfRangePassword(Employee employee) {
 
         // 桁数チェック
         int passwordLength = employee.getPassword().length();

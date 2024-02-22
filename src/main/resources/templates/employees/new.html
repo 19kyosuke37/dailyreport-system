@@ -25,8 +25,11 @@
                                         <label class="form-label" for="code">社員番号</label>
                                         <p class="mb-1"></p>
                                         <div class="col-md-7">
-                                            <input class="form-control" type="text" th:field="*{code}" th:errorclass="err" id="code">
+                                            <!--th:errorclass属性は、エラーで返ってきた場合の適応する処理を指定　ちなみにtext-dangerはBootsStrapでテキストを赤にする-->
+                                            <input class="form-control" type="text" th:field="*{code}" th:errorclass="text-danger" id="code">
+                                            <!--こっちはバリデーションチェックでのエラー対応-->
                                             <span th:errors="*{code}" class="text-danger"></span>
+                                            <!--こっちはErrorKindsでのエラーがあり、modelクラスで送られてくる"codeError"の値がnull出なかった場合のエラー対応-->
                                             <span th:if="${codeError} neq null" th:text="${codeError}" class="text-danger"></span>
                                         </div>
                                     </div>

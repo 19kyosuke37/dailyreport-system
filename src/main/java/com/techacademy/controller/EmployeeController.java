@@ -34,6 +34,15 @@ public class EmployeeController {
         this.employeeService = employeeService;
     }
 
+    /*
+     * //従業員検索
+     *
+     * @PostMapping public String search(Model model,) {
+     *
+     * return "employees/list"; }
+     *
+     */
+
     // 従業員一覧画面
     @GetMapping
     public String list(Model model) {
@@ -83,7 +92,7 @@ public class EmployeeController {
             return create(employee);
         }
 
-        //★★★論理削除を行った従業員番号を指定すると例外となるためtry~catchで対応★★★
+        // ★★★論理削除を行った従業員番号を指定すると例外となるためtry~catchで対応★★★
         // (findByIdでは削除フラグがTRUEのデータが取得出来ないため)
         try {
             // サービスにて半角英数字チェックやDB登録処理を行い、結果をErrorKindsクラスで受け取る。
@@ -114,6 +123,7 @@ public class EmployeeController {
         ErrorKinds result = employeeService.delete(code, userDetail);
 
         if (ErrorMessage.contains(result)) {
+ //★いろんなところでつかっている (ErrorMessage.contains(result))はようはserviceから返ってきたreturnが"ErrorMessage.SUCSECS"じゃなかった場合のこと
             model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
             model.addAttribute("employee", employeeService.findByCode(code));
             return detail(code, model);
@@ -122,15 +132,15 @@ public class EmployeeController {
         return "redirect:/employees";
     }
 
-
     // 従業員更新画面
     @GetMapping(value = "/{code}/update")
     public String edit(@PathVariable String code, Model model, Employee employee) {
 
-        /*下の処理について、
-         *存在する従業員の詳細ページから送られてくるのに、nullなはずがないと思っていたが、
-         *この後の更新処理時にpostメソッドで送られてきたものが、バリデーションでエラーがあり再度editメソッドに返された際には
-         *コードがnullなため、エラーがあったemplyeeの値でmodelを扱う必要があった！*/
+        /*
+         * 下の処理について、 存在する従業員の詳細ページから送られてくるのに、nullなはずがないと思っていたが、
+         * この後の更新処理時にpostメソッドで送られてきたものが、バリデーションでエラーがあり再度editメソッドに返された際には
+         * コードがnullなため、エラーがあったemplyeeの値でmodelを扱う必要があった！
+         */
         if (code != null) {
             model.addAttribute("employee", employeeService.findByCode(code));
         } else {
@@ -145,18 +155,19 @@ public class EmployeeController {
     public String update(@Validated Employee employee, BindingResult res, Model model, @PathVariable String code) {
 
         // 空欄でないかつ、文字数が8文字未満16文字を超えない、半角以外の英数字を使っていない//
-        int passwordLength = employee.getPassword().length();
 
         ErrorKinds result = employeeService.employeePasswordCheck(employee);
 
         if (!"".equals(employee.getPassword()) && ErrorMessage.contains(result)) {
             model.addAttribute(ErrorMessage.getErrorName(result), ErrorMessage.getErrorValue(result));
-            return edit(null, model, employee);
+            return edit(null, model, employee);//ここで引数にされるemployeeはまちがった値がフィールドに設定されたもの
         }
 
-        // 入力チェック
+        //ここまで処理が到達したら、とりあえずパスワードでのエラーはなかったよーってことになる
+
+        // 入力チェック（エンティティで設定したバリデーションチェック）
         if (res.hasErrors()) {
-            return edit(null, model, employee);
+            return edit(null, model, employee);//ここでも引数にされるemployeeはまちがった値がフィールドに設定されたもの
         }
 
         // ------登録日時はそのままにする(場所に注意。上から順番にプログラムが実行されることを意識する）------

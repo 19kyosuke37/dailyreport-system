@@ -112,7 +112,7 @@ public class EmployeeService {
         // 半角英数字チェック
         Pattern pattern = Pattern.compile("^[A-Za-z0-9]+$");
         Matcher matcher = pattern.matcher(employee.getPassword());
-        return !matcher.matches();
+        return !matcher.matches();//booleanでyes,noを返している
     }
 
     // 従業員パスワードの8文字～16文字チェック処理
@@ -120,7 +120,7 @@ public class EmployeeService {
 
         // 桁数チェック
         int passwordLength = employee.getPassword().length();
-        return passwordLength < 8 || 16 < passwordLength;
+        return passwordLength < 8 || 16 < passwordLength;//半角チェックと同様にbooleanでyes,noを返している
     }
 
     // 従業員更新（追加）

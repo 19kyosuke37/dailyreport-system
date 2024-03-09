@@ -147,4 +147,10 @@ public class EmployeeService {
         return ErrorKinds.SUCCESS;
     }
 
+    /*従業員検索
+    public List<Employee> searchEmployees(String name) {
+        return
+    }
+    */
+
 }

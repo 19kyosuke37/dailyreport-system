@@ -37,7 +37,8 @@ public class EmployeeController {
     /*
      * //従業員検索
      *
-     * @PostMapping public String search(Model model,) {
+     * @GetMapping
+     * public String search(Model model,) {
      *
      * return "employees/list"; }
      *

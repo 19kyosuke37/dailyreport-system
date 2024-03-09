@@ -29,6 +29,7 @@
                                     <tbody>
                                         <tr th:each="report:${reportList}">
                                             <td class="align-middle" th:text="${report.employeeCode.name}"></td>
+                                            <!--reportクラスに接続して、さらにフィールドのemployeeCodeに接続して、そこから対応しているemployeeの値（今回なら名前）を取得している-->
                                             <td class="align-middle" th:text="${report.reportDate}"></td>
                                             <td calss="align-middle" th:text="${report.title}"></td>
                                             <td class="align-middle"><a th:href="@{/report/{id}/(id=${report.id})}"

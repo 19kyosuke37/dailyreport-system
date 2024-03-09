@@ -42,9 +42,13 @@
                                         <div class="col-md-7">
                                             <input class="form-control" type="hidden" th:text="${name}"
                                                 th:value="${name}" id="name">
+                                                 <!--nameだけはreportでmodelが送られえてないから、th:objectの範囲じゃないから、*（アスタリスク）じゃダメで（$）-->
 
                                         </div>
                                     </div>
+
+                                    <!--タイトルとか内容のth:fieldをth:textにすると表示はされるが、テンプレートで入力して内容変更とかができなくなる
+                                    また、th:fieldで入力された値はreportにバインドされて、サーバ側のmodelで更新される。-->
 
                                     <div class="mb-3">
                                         <label class="form-label" for="title">タイトル</label>

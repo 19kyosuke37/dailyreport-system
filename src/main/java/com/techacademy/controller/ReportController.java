@@ -76,10 +76,15 @@ public class ReportController {
 
         // ----------- すでに登録したい日付が、同じユーザーで登録されている場合のエラー----------------------------
 
-        List<Report> reportList = reportService.findReportsByEmployeeCode(userDetail.getUsername());
+        List<Report> reportList = reportService.findReportsByEmployeeCode(employeeCode);
 
         for (Report aReport : reportList) {
             if (aReport.getReportDate().equals(report.getReportDate())) {
+
+                /*更新の時には個々のもう１処理　｛if (report.getId() != aReport.getId())｝　あったが、新登録の場合にはいらない。
+                 * 更新の場合は既存のreportのリスト内にあるものと被った際に、今まさに更新しようとしているreportの可能性があったが、
+                 * 新規の場合は今新しく作ってsaveできるかのチェックをしている段階のため、今表示しているrecordのidと同じreportがまだリスト内にあるはずがないため、
+                 * そもそも日付がすでに登録されているreportのlistの中のものと被った時点で登録できない。 */
 
                 model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DATECHECK_ERROR),
                         ErrorMessage.getErrorValue(ErrorKinds.DATECHECK_ERROR));
@@ -101,7 +106,7 @@ public class ReportController {
 
     }
 
-    // 日報更新画面(追加)
+    // 日報更新画面
     @GetMapping(value = "/{id}/update")
     public String edit(@PathVariable Integer id, Model model, Report report,
             @AuthenticationPrincipal UserDetail userDetail) {
@@ -126,11 +131,13 @@ public class ReportController {
         Employee employee = employeeService.findByCode(employeeCode);
         List<Report> reportList = reportService.findReportsByEmployeeCode(employeeCode);
 
-        // 入力した日付」の日報データが存在する場合のエラー処理
+        // 入力した日付の日報データが存在する場合のエラー処理
         for (Report aReport : reportList) {
             if (aReport.getReportDate().equals(report.getReportDate())) {
                 // ※更新画面で表示中の日報データは除く。(選択している日付さえも更新できなくなってしまうから)
                 // つまり、下のエラー処理は処理対象の日付が、表示中の日付でない場合に実行することになる。
+                /* ちなみにこの処理は主キーであるidを比較している。一意のはずだから、日付が一緒だったとしても、ここで一致すれば表示中の日報ということになるから処理が通る。
+                   ここで一致しなければ、主キーの値が違うということで、現在表示中以外のどこかの日報と日付が同一であることになるためエラー処理が返される*/
                 if (report.getId() != aReport.getId()) {
 
                     model.addAttribute(ErrorMessage.getErrorName(ErrorKinds.DATECHECK_ERROR),

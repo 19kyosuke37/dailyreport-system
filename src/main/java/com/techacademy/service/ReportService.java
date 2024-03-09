@@ -66,7 +66,7 @@ public class ReportService {
         return reportRepository.save(report);
     }
 
-    // 日報更新
+    // 日報削除
     @Transactional
     public void reportDelete(int id) {
         Report report = findById(id);
